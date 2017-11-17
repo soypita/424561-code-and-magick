@@ -53,9 +53,9 @@ window.renderStatistics = function (ctx, names, times) {
     ctx.fillText(result, initialX + (barWidth + indent) * i, initialY + histogramHeight - times[i] * step);
 
     ctx.fillStyle = (names[i] === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'rgba(0, 0, 255, ' + (Math.random() * 0.9 + 0.1) + ')');
-    ctx.fillRect(initialX + (barWidth + indent) * i, initialY + lineHeight + histogramHeight - times[i] * step, barWidth, times[i] * step);
+    ctx.fillRect(initialX + (barWidth + indent) * i, initialY + (lineHeight + histogramHeight - times[i] * step), barWidth, times[i] * step);
 
     ctx.fillStyle = '#000';
-    ctx.fillText(names[i], initialX + (barWidth + indent) * i, initialY + histogramHeight + 2 * lineHeight);
+    ctx.fillText(names[i], initialX + (barWidth + indent) * i, initialY + (histogramHeight + 2 * lineHeight));
   }
 };
