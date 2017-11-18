@@ -19,7 +19,6 @@ var createComplexRect = function (ctx, initialX, initialY, color) {
   ctx.stroke();
   ctx.fill();
 };
-
 var findMaxValue = function (arr) {
   var max = -1;
   for (var i = 0; i < arr.length; i++) {
@@ -30,32 +29,58 @@ var findMaxValue = function (arr) {
   return max;
 };
 
+var getRandomBlueColor = function () {
+  return 'rgba(0, 0, 255, ' + (Math.random() * 0.9 + 0.1) + ')';
+};
+
+var getUserColor = function (name) {
+  var PLAYER_NAME = 'Вы';
+  var PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
+  return name === PLAYER_NAME ? PLAYER_COLOR : getRandomBlueColor();
+};
+
+var drawColorText = function (ctx, value, initialX, initialY, color) {
+  ctx.fillStyle = color;
+  ctx.fillText(value, initialX, initialY);
+};
+
+var getXshift = function (initialX, width, indent, currentNumber) {
+  return initialX + (width + indent) * currentNumber;
+};
+
+var getYshift = function (initialY, height, shift) {
+  return initialY + height + shift;
+};
+
+var drawHistogramBar = function (ctx, xPosition, yPosition, width, height, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(xPosition, yPosition, width, height);
+};
+
 window.renderStatistics = function (ctx, names, times) {
   createComplexRect(ctx, 110, 20, 'rgba(0, 0, 0, 0.7)');
   createComplexRect(ctx, 100, 10, 'white');
-  ctx.fillStyle = '#000';
   ctx.font = '16px PT Mono';
-  ctx.fillText('Ура вы победили!', 120, 40);
-  ctx.fillText('Список результатов:', 120, 55);
+  drawColorText(ctx, 'Ура вы победили!', 120, 40, '#000');
+  drawColorText(ctx, 'Список результатов:', 120, 55, '#000');
 
-  var worstResult = findMaxValue(times);
   var histogramHeight = 150;
+  var worstResult = findMaxValue(times);
   var step = histogramHeight / worstResult;
   var barWidth = 40;
   var indent = 50;
   var initialX = 155;
   var initialY = 80;
   var lineHeight = 15;
+  var nameShift = getYshift(initialY, histogramHeight, 2 * lineHeight);
 
   for (var i = 0; i < names.length; i++) {
-    ctx.fillStyle = '#000';
     var result = times[i].toFixed().toString();
-    ctx.fillText(result, initialX + (barWidth + indent) * i, initialY + histogramHeight - times[i] * step);
-
-    ctx.fillStyle = (names[i] === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'rgba(0, 0, 255, ' + (Math.random() * 0.9 + 0.1) + ')');
-    ctx.fillRect(initialX + (barWidth + indent) * i, initialY + (lineHeight + histogramHeight - times[i] * step), barWidth, times[i] * step);
-
-    ctx.fillStyle = '#000';
-    ctx.fillText(names[i], initialX + (barWidth + indent) * i, initialY + (histogramHeight + 2 * lineHeight));
+    var barHeight = times[i] * step;
+    var x = getXshift(initialX, barWidth, indent, i);
+    var y = getYshift(initialY, histogramHeight, -barHeight);
+    drawColorText(ctx, result, x, y, '#000');
+    drawHistogramBar(ctx, x, lineHeight + y, barWidth, barHeight, getUserColor(names[i]));
+    drawColorText(ctx, names[i], x, nameShift, '#000');
   }
 };
