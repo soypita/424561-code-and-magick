@@ -75,7 +75,7 @@ window.renderStatistics = function (ctx, names, times) {
   var nameShift = getYshift(initialY, histogramHeight, 2 * lineHeight);
 
   for (var i = 0; i < names.length; i++) {
-    var result = times[i].toFixed().toString();
+    var result = times[i].toFixed();
     var barHeight = times[i] * step;
     var x = getXshift(initialX, barWidth, indent, i);
     var y = getYshift(initialY, histogramHeight, -barHeight);
